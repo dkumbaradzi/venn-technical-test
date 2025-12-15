@@ -6,23 +6,15 @@ import { http, HttpResponse } from 'msw';
 
 export const BE_URL = "https://fe-hometask-api.qa.vault.tryvault.com"
 
-const posts = [
-  {
-    userId: 1,
-    id: 1,
-    title: 'first post title',
-    body: 'first post body',
-  },
-  // ...
-];
-
 export const restHandlers = [
   http.get(`${BE_URL}/corporation-number/123456789`, () => {
-    return HttpResponse.json(posts);
+    return HttpResponse.json({
+      corporationNumber: '123456789',
+      valid: true,
+    });
   }),
-  http.post(`${BE_URL}/profile-details`, async ({ request }) => {
-    const body = await request.json() as { corporationNumber?: string };
-    return HttpResponse.json({ valid: true, corporationNumber: body?.corporationNumber });
+  http.post(`${BE_URL}/profile-details`, () => {
+    return new HttpResponse(null, { status: 200 });
   }),
 ];
 

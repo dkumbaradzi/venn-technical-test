@@ -89,7 +89,7 @@ describe('useProfileDetailsSubmit', () => {
     server.use(
       http.post(`${BE_URL}/profile-details`, async ({ request }) => {
         receivedData = await request.json() as ProfileData;
-        return HttpResponse.json({ valid: true, corporationNumber: receivedData.corporationNumber });
+        return HttpResponse.json(null, { status: 200 });
       })
     );
 

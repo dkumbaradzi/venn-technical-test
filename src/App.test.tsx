@@ -161,7 +161,7 @@ describe('App', () => {
         return HttpResponse.json({ valid: true }, { status: 200 });
       }),
       http.post(`${BE_URL}/profile-details`, async () => {
-        return HttpResponse.json({ success: true }, { status: 200 });
+        return HttpResponse.json(null, { status: 200 });
       })
     );
 
@@ -193,7 +193,7 @@ describe('App', () => {
         return HttpResponse.json({ valid: true }, { status: 200 });
       }),
       http.post(`${BE_URL}/profile-details`, async () => {
-        return HttpResponse.json({ error: 'Server error' }, { status: 500 });
+        return HttpResponse.json({ message: 'Server error' }, { status: 500 });
       })
     );
 
