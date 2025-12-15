@@ -1,53 +1,27 @@
 
 import './App.css'
+import { Toaster } from 'react-hot-toast';
 import { useForm, FormProvider } from 'react-hook-form';
 import Input from './components/InputFormControl';
 import PhoneInput from './components/PhoneInputFormControl';
-import CorporationNumberField from './components/CorporationNumberField';
+import useProfileDetailsSubmit from './hooks/useProfileDetailsSubmit';
+import { useCorporationNumberValidation } from './hooks/useCorporationNumberValidation';
 
 const NAME_VALIDATION_REGEX = /^[a-zA-Z]+([ '-]?[a-zA-Z]+)*$/;
-
-type FormData = {
-  name: string;
-  lastName: string;
-  phone: string;
-  corporationNumber: string;
-};
 
 function App() {
   const { setError, clearErrors, ...formMethods } = useForm({
     mode: 'onBlur',
     defaultValues: {
-      name: '',
+      firstName: '',
       lastName: '',
       phone: '+1',
       corporationNumber: '',
     },
   });
 
-  const submitForm = async (data: FormData) => {
-    try {
-      const response = await fetch(
-        'https://fe-hometask-api.qa.vault.tryvault.com/profile-details',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      return {
-        success: response.ok,
-      };
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      return {
-        success: false,
-      };
-    }
-  };
+  const { validate, onCorporationNumberChange } = useCorporationNumberValidation();
+  const { onSubmit } = useProfileDetailsSubmit();
 
   return (
     <FormProvider
@@ -90,31 +64,23 @@ function App() {
               withCountryCallingCode
               useNationalFormatForDefaultCountryValue
             />
-            <CorporationNumberField />
+            <Input
+              className="px-4"
+              name="corporationNumber"
+              label="Corporation Number"
+              validate={validate}
+              onChange={onCorporationNumberChange}
+            />
           </div>
           <button
             type="button"
             className="bg-black hover:bg-gray-700 transition-colors duration-200 ease-in-out text-white rounded-lg mx-8 mb-6 py-2"
-            onClick={() => {
-              formMethods.handleSubmit((data) => {
-                submitForm(data)
-                  .then((response) => {
-                    if (response.success) {
-                      // toast.success('Form submitted successfully!');
-                    } else {
-                      // toast.error('Error submitting form');
-                    }
-                  })
-                  .catch(() => {
-                    // toast.error('Error submitting form');
-                  });
-              })();
-            }}
+            onClick={formMethods.handleSubmit(onSubmit)}
           >
             Submit
           </button>
         </div>
-        {/* <Toaster /> */}
+        <Toaster />
       </div>
     </FormProvider>
   );

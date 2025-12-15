@@ -11,7 +11,6 @@ type Props = {
   pattern?: ValidationRule<RegExp>;
   onChange?: (value: string) => void;
   validate?: (value: string) => boolean | string | Promise<boolean | string>;
-  setValueAs?: (value: string) => void;
 };
 
 export const InputFormControlComponent = ({
@@ -22,7 +21,6 @@ export const InputFormControlComponent = ({
   pattern,
   onChange,
   validate,
-  setValueAs,
 }: Props) => {
   const {
     formState: { errors },
@@ -44,11 +42,9 @@ export const InputFormControlComponent = ({
           required,
           pattern,
           onChange: (e) => {
-            console.log('this fires')
             onChange?.(e.target.value);
           },
           validate,
-          setValueAs,
         })}
       />
     </FormControl>

@@ -1,7 +1,9 @@
+import { useMemo } from 'react';
 import PhoneInput, { type Props as PhoneInputProps } from "react-phone-number-input/react-hook-form-input"
 import { parsePhoneNumber, type DefaultInputComponentProps } from 'react-phone-number-input';
 import { get, useFormContext, type FieldValues } from 'react-hook-form';
 import classNames from 'classnames';
+import throttle from 'lodash/throttle';
 import FormControl from "./FormControl";
 
 type Props = PhoneInputProps<DefaultInputComponentProps, FieldValues> & {
@@ -9,12 +11,20 @@ type Props = PhoneInputProps<DefaultInputComponentProps, FieldValues> & {
   label: string
 };
 
-export const PhoneInputFormControl = ({ className, name, label, onChange, value, ...props }: Props) => {
+export const PhoneInputFormControl = ({ className, name, label, ...props }: Props) => {
   const {
     formState: { errors },
-    control
+    control, setValue
   } = useFormContext();
   const hasError = !!get(errors, name);
+
+  // Throttle onChange to prevent excessive updates due to library bug when typing very fast
+  const throttledOnChange = useMemo(
+    () => throttle((value: string | undefined) => {
+      setValue(name, value);
+    }, 300),
+    [name, setValue]
+  );
 
   return (
     <FormControl name={name} label={label} className={className}>
@@ -25,10 +35,7 @@ export const PhoneInputFormControl = ({ className, name, label, onChange, value,
           'border-2 border-red-500': hasError,
         })}
         country="CA"
-        value={value}
-        onChange={(value: string) => {
-          onChange?.(value);
-        }}
+        onChange={throttledOnChange}
         {...props}
         rules={{
           required: 'Please enter phone number',
@@ -39,8 +46,6 @@ export const PhoneInputFormControl = ({ className, name, label, onChange, value,
             if (phoneNumber?.country !== 'CA') {
               return 'Please enter a valid Canadian phone number';
             }
-
-            console.log('Validating phone number:', value, phoneNumber?.country);
           }
         }}
         maxLength={15}

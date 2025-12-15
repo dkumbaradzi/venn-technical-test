@@ -1,59 +1,35 @@
-import debounce from 'lodash/debounce';
-import { useFormContext } from 'react-hook-form';
+import { useCallback, useState } from 'react';
+import { validateCorporationNumber } from '../helpers';
 
-type Props = {
-  name: string;
-}
+export const useCorporationNumberValidation = () => {
+  const [isValid, setIsValid] = useState<boolean | null>(false);
 
-export const useCorporationNumberValidation = ({ name }: Props) => {
-  const { setError, clearErrors } = useFormContext();
-  const validateCorporationNumber = async (
-    corporationNumberValue: string
-  ): Promise<{
-    valid: boolean;
-    message?: string;
-    corporationNumber?: string;
-  }> => {
-    try {
-      const response = await fetch(
-        `https://fe-hometask-api.qa.vault.tryvault.com/corporation-number/${corporationNumberValue}`
-      );
-      const data = await response.json();
+  const onCorporationNumberChange = useCallback(() => {
+    setIsValid(false);
+  }, [])
 
-      console.log('data', data);
-      return data;
-    } catch (error) {
-      console.error('Error validating corporation number:', error);
-      return {
-        valid: false,
-        message: 'An error occurred while validating the corporation number.',
-      };
+  const validate = useCallback(async (value: string | undefined) => {
+    // prevents the same API call from firing if the previous valid value was not changed
+    if (isValid) {
+      return true;
     }
-  };
+    if (!value) return 'Corporation number is required';
 
-  const onCorporationNumberChange = debounce(async (value: string | undefined) => {
-    console.log('Debounced validation for corporation number:', value);
-    if (!value) return;
+    if (value.length < 9) return 'Invalid corporation number';
 
-    const validationResponse = await validateCorporationNumber(value);
+    const validationResult = await validateCorporationNumber(value);
 
-    if (!validationResponse.valid) {
-      setError(name, {
-        type: 'validation',
-        message: validationResponse.message || 'Invalid corporation number',
-      });
-    } else {
-      clearErrors(name);
+    if (validationResult === true) {
+      setIsValid(true);
     }
-  }, 200);
+
+    return validationResult;
+
+  }, [isValid]);
 
   return {
-    validate: async (value: string | undefined) => {
-      console.log('Validating corporation number:', value);
-      if (!value) return 'Corporation number is required';
-      const response = await validateCorporationNumber(value);
-      return response.valid || response.message || 'Invalid corporation number';
-    },
+    validate,
+    isValid,
     onCorporationNumberChange,
   };
 };
