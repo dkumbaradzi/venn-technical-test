@@ -30,6 +30,7 @@ export const PhoneInputFormControl = ({ className, name, label, ...props }: Prop
     <FormControl name={name} label={label} className={className}>
       <PhoneInput
         name={name}
+        id={name}
         control={control}
         className={classNames("border border-gray-300 rounded-lg px-4 py-3 w-full", {
           'border-2 border-red-500': hasError,

@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
@@ -14,5 +15,14 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ''),
       }
     }
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './setupTests.ts',
+    coverage: {
+      reporter: ['text', 'json', 'html'],
+      exclude: ['node_modules/**', 'src/main.tsx', 'src/vite-env.d.ts'],
+    },
   }
 })
