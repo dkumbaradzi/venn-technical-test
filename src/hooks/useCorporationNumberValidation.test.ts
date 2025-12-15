@@ -1,10 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
-import { server } from '../../setupTests';
+import { server, BE_URL } from '../../setupTests';
 import { useCorporationNumberValidation } from './useCorporationNumberValidation';
-
-const BE_URL = 'https://fe-hometask-api.qa.vault.tryvault.com';
 
 describe('useCorporationNumberValidation', () => {
   it('should initialize with isValid as false', async () => {

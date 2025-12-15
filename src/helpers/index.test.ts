@@ -1,9 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { http, HttpResponse } from 'msw';
-import { server } from '../../setupTests';
+import { server, BE_URL } from '../../setupTests';
 import { submitForm, validateCorporationNumber, type ProfileData } from './index';
-
-const BE_URL = 'https://fe-hometask-api.qa.vault.tryvault.com';
 
 describe('Helpers', () => {
   describe('submitForm', () => {

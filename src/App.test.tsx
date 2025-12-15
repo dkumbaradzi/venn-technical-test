@@ -3,10 +3,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import App from './App';
 import toast from 'react-hot-toast';
-import { server } from '../setupTests';
+import { server, BE_URL } from '../setupTests';
 import { http, HttpResponse } from 'msw';
-
-const BE_URL = 'https://fe-hometask-api.qa.vault.tryvault.com';
 
 vi.mock('react-hot-toast', () => ({
   default: {

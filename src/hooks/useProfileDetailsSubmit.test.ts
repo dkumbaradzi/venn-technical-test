@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
-import { server } from '../../setupTests';
+import { server, BE_URL } from '../../setupTests';
 import { useProfileDetailsSubmit } from './useProfileDetailsSubmit';
 import type { ProfileData } from '../helpers/index';
 import toast from 'react-hot-toast';
@@ -12,8 +12,6 @@ vi.mock('react-hot-toast', () => ({
     error: vi.fn(),
   },
 }));
-
-const BE_URL = 'https://fe-hometask-api.qa.vault.tryvault.com';
 
 describe('useProfileDetailsSubmit', () => {
   it('should call toast.success when form submission is successful', async () => {

@@ -15,7 +15,6 @@
     "@hookform/error-message": "^2.0.1",
     "@tailwindcss/vite": "^4.1.18",
     "classnames": "^2.5.1",
-    "libphonenumber-js": "^1.12.31",
     "lodash": "^4.17.21",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

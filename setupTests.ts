@@ -4,7 +4,7 @@ import { afterAll, afterEach, beforeAll } from 'vitest';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
 
-const BE_URL = process.env.BE_URL ?? "https://fe-hometask-api.qa.vault.tryvault.com"
+export const BE_URL = "https://fe-hometask-api.qa.vault.tryvault.com"
 
 const posts = [
   {
